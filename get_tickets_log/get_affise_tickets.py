@@ -15,8 +15,8 @@ AFFISE_API_KEY = '1472b075254d6df44e295b3912665295'
 
 
 def get_affise_tickets():
-    # manager_list = ['5fcf594293079980c967281a', '6059a302c3c1c3e3b2466d63']
-    manager_list = ['6059a302c3c1c3e3b2466d63']
+    manager_list = ['5fcf594293079980c967281a', '6059a302c3c1c3e3b2466d63']
+    # manager_list = ['6059a302c3c1c3e3b2466d63']
     ak_manager_list = ['6059a302c3c1c3e3b2466d63']
     today = str(dt.date.today())
     yesterday = str(dt.date.today() - dt.timedelta(days=1))

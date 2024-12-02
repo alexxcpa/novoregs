@@ -1,0 +1,11 @@
+2024-07-27 18:17:31,052 :: novoreg_table :: crm_deal_update:98 :: INFO :: Пробуем обновить партнера 8924 в crm битрикс
+2024-07-27 18:17:31,356 :: novoreg_table :: crm_deal_update:102 :: INFO :: Успешно обновили партнера 8924
+2024-07-27 18:18:47,156 :: novoreg_table :: crm_deal_update:98 :: INFO :: Пробуем обновить партнера 8924 в crm битрикс
+2024-07-27 18:18:47,537 :: novoreg_table :: crm_deal_update:102 :: INFO :: Успешно обновили партнера 8924
+2024-07-27 18:19:37,643 :: novoreg_table :: crm_deal_update:98 :: INFO :: Пробуем обновить партнера 8924 в crm битрикс
+2024-07-27 18:19:37,976 :: novoreg_table :: crm_deal_update:102 :: INFO :: Успешно обновили партнера 8924
+2024-07-27 18:28:35,881 :: novoreg_table :: crm_deal_add:138 :: INFO :: Пробуем добавить партнера 25225 в crm битрикс
+2024-07-27 18:28:37,018 :: novoreg_table :: crm_deal_add:143 :: INFO :: Успешно добавили партнера 25225 в crm битрикс
+2024-07-27 18:28:37,031 :: novoreg_table :: crm_deal_update:98 :: INFO :: Пробуем обновить партнера 0 в crm битрикс
+2024-07-27 18:28:40,646 :: novoreg_table :: crm_deal_update:98 :: INFO :: Пробуем обновить партнера 9442 в crm битрикс
+2024-07-27 18:28:41,042 :: novoreg_table :: crm_deal_update:102 :: INFO :: Успешно обновили партнера 9442

@@ -52,7 +52,7 @@ def get_affise_tickets():
 
     for ticket in res['tickets']:
         try:
-            if ticket['type'] == 'offer_request' and str(ticket['partner']['manager']['id']):
+            if ticket['type'] == 'offer_request' and str(ticket['partner']['manager']['id']) in manager_list:
                 if today in ticket['created'] or yesterday in ticket['created']:
                         # if ticket['partner']['id'] in test_partners:
                         ticket_info = {'id': ticket['id'],
@@ -91,8 +91,9 @@ def get_affise_tickets():
     else:
         log.msg.info(f'Успешно сформировали список тикетов для подключения')
 
-        # for i in connect_tickets_list:
-        #     print(i)
+        for i in connect_tickets_list:
+            print(i)
         # print(len(connect_tickets_list))
         return connect_tickets_list
 
+get_affise_tickets()

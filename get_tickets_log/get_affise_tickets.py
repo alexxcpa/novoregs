@@ -52,7 +52,7 @@ def get_affise_tickets():
 
     for ticket in res['tickets']:
         try:
-            if ticket['type'] == 'offer_request' and str(ticket['partner']['manager']['id']) in manager_list and ticket['partner']['id'] == 33061:
+            if ticket['type'] == 'offer_request' and str(ticket['partner']['manager']['id']):
                 if today in ticket['created'] or yesterday in ticket['created']:
                         # if ticket['partner']['id'] in test_partners:
                         ticket_info = {'id': ticket['id'],

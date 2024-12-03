@@ -37,20 +37,28 @@ ABOUT_LIMIT ='\n' + """
 [Подробнее про лимит в 100 конверсий](https://docs.google.com/d, ment/d/1FqOnKFEzHI7SvmyVSloW78ehxLy6MctDqFpminFCUHo/edit?usp=sharing) """
 
 ABOUT_DELAY = '\n' + """
-После подключения офферы появятся в доступных в течение 2-3 минут."""
+После подключения офферы появятся в разделе "Доступные" в течение 2-3 минут."""
 
 def tg_send_info(ticket, good_connect_offers_list, black_list_offers_list, frod_msg: bool):
     msg_title = f"Партнеру {ticket['partner']} подключили офферы:"
+    black_list_msg = '🛑 Следующие офферы временно не доступны для подключения новым вебмастерам. Для уточнения деталей обратись к личному менеджеру' '\n \n👉' + '\n \n👉'.join(black_list_offers_list)
+    good_connect_offers_msg = '\n \n👉' + '\n \n👉'.join(good_connect_offers_list) + '\n \n' + 'На каждый оффер стартовый лимит 100 конверсий'
+
     if frod_msg is True:
         frod_msg = f"\n{FROD_MSG}"
     else:
         frod_msg = ""
-    if len(black_list_offers_list) > 0:
-        black_list_msg =  'Следующие офферы на данный момент недоступны для подключения новым вебмастерам. Для уточнения деталей обратись к личному менеджу' '\n \n👉' + '\n \n👉'.join(black_list_offers_list)
-    else:
-        black_list_msg = ''
-    offers_msg = msg_title + '\n \n👉' + '\n \n👉'.join(good_connect_offers_list) + '\n \n' + 'На каждый оффер стартовый лимит 100 конверсий' + frod_msg + ABOUT_LIMIT + ABOUT_DELAY + black_list_msg
+
+    if len(good_connect_offers_list) > 0 and len(black_list_offers_list) > 0:
+        offers_msg = msg_title + good_connect_offers_msg + frod_msg + ABOUT_LIMIT + ABOUT_DELAY + '\n'+'\n' + black_list_msg
+    elif len(good_connect_offers_list) > 0 and len(black_list_offers_list) == 0:
+        offers_msg = msg_title + good_connect_offers_msg + frod_msg + ABOUT_LIMIT + ABOUT_DELAY
+    elif len(good_connect_offers_list) == 0 and len(black_list_offers_list) > 0:
+        offers_msg = black_list_msg
+
+
     send_msg_tg_bot_manager(offers_msg)
+
     if hello_bot_db.validation_by_partner_id(int(ticket['partner'])):
         chat_id = hello_bot_db.get_chat_id_by_partner(int(ticket['partner']))
         send_msg_tg_bot_partner(offers_msg, chat_id)
@@ -71,9 +79,13 @@ def approve_tickets(ticket_list):
             #     continue
             for offer in ticket['offers_list']:
                 if offer['offer_id'] in OFFER_BLACK_LIST:
-                    log.msg.info(f"Партнер {ticket['partner']} : Тикет {offer['ticket_id']} : Оффер {offer['offer_id']} на данный момент находится в блек листе")
-                    black_list_offers_list.append(f"[{offer['offer_title'].replace('[', '(').replace(']', ')')}](https://my.leadmagnet.ru/show/{offer['offer_id']})")
-                    continue
+                    if db.check_black_list_ticket(offer['ticket_id']):
+                        continue
+                    else:
+                        log.msg.info(f"Партнер {ticket['partner']} : Тикет {offer['ticket_id']} : Оффер {offer['offer_id']} на данный момент находится в блек листе")
+                        db.add_black_list_ticket(int(offer['ticket_id']), int(ticket['partner']), int(offer['offer_id']), str(offer['offer_title']))
+                        black_list_offers_list.append(f"[{offer['offer_title'].replace('[', '(').replace(']', ')')}](https://my.leadmagnet.ru/show/{offer['offer_id']})")
+                        continue
                 log.msg.info(f"Партнер {ticket['partner']}: Пробуем подключить оффер {offer['offer_id']} в тикете {offer['ticket_id']}" )
                 params = {'do': 'approve'}
                 url = f"https://api-lead-magnet.affise.com/3.0/admin/ticket/{offer['ticket_id']}/offer"
@@ -97,8 +109,6 @@ def approve_tickets(ticket_list):
                         tg_send_info(ticket, good_connect_offers_list, black_list_offers_list, frod_msg=False)
                 else:
                     tg_send_info(ticket, good_connect_offers_list, black_list_offers_list, frod_msg=False)
-            if len(black_list_offers_list) > 0:
-                tg_send_info(ticket, good_connect_offers_list, black_list_offers_list, frod_msg=False)
 
 
     except Exception as err:

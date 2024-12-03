@@ -15,8 +15,8 @@ AFFISE_API_KEY = '1472b075254d6df44e295b3912665295'
 
 
 def get_affise_tickets():
-    manager_list = ['5fcf594293079980c967281a', '6059a302c3c1c3e3b2466d63']
-    # manager_list = ['6059a302c3c1c3e3b2466d63']
+    # manager_list = ['5fcf594293079980c967281a', '6059a302c3c1c3e3b2466d63']
+    manager_list = ['5fcf594293079980c967281a']
     ak_manager_list = ['6059a302c3c1c3e3b2466d63']
     today = str(dt.date.today())
     yesterday = str(dt.date.today() - dt.timedelta(days=1))
@@ -24,8 +24,6 @@ def get_affise_tickets():
     # yesterday = "2024-02-06"
 
     test_partners = [24894, 28572, 28736]
-
-
     res = None
     affise_tickets_list = []
     partners_set = set([])
@@ -54,7 +52,7 @@ def get_affise_tickets():
 
     for ticket in res['tickets']:
         try:
-            if ticket['type'] == 'offer_request' and str(ticket['partner']['manager']['id']) in manager_list:
+            if ticket['type'] == 'offer_request' and str(ticket['partner']['manager']['id']) in manager_list and ticket['partner']['id'] == 33061:
                 if today in ticket['created'] or yesterday in ticket['created']:
                         # if ticket['partner']['id'] in test_partners:
                         ticket_info = {'id': ticket['id'],
@@ -79,7 +77,11 @@ def get_affise_tickets():
         offer_connect_info = {'partner': partner}
         for ticket in affise_tickets_list:
             if ticket['partner'] == partner:
-                offer = {'ticket_id': ticket['id'], 'offer_id': ticket['offer'], 'offer_title': ticket['title']}
+                if 'Подключение оффера' in str(ticket['title']):
+                    offer_title = str(ticket['title']).replace('Подключение оффера', '')
+                else:
+                    offer_title = ticket['title']
+                offer = {'ticket_id': ticket['id'], 'offer_id': ticket['offer'], 'offer_title': offer_title}
                 offers_list.append(offer)
                 offer_connect_info['offers_list'] = offers_list
         connect_tickets_list.append(offer_connect_info)
@@ -93,5 +95,4 @@ def get_affise_tickets():
         #     print(i)
         # print(len(connect_tickets_list))
         return connect_tickets_list
-
 

@@ -305,3 +305,28 @@ def get_novoreg_status(partner_id: int, column: str):
     db.commit()
     db.close()
     return res
+
+def add_black_list_ticket(ticket_id: int, partner_id: int,  offer_id: int, offer_title: str):
+    try:
+        db = sqlite3.connect('../get_tickets_log/black_list_tickets.db')
+        cur = db.cursor()
+        cur.execute(f"""INSERT INTO black_list_tickets (ticket_id, partner_id, offer_id, offer_title)
+                                        VALUES ('{ticket_id}', '{partner_id}', '{offer_id}', '{offer_title}') """)
+        db.commit()
+        db.close()
+    except Exception as err:
+        print(f'Получили ошибку базы {err}')
+    return True
+
+def check_black_list_ticket(ticket_id: int):
+    db = sqlite3.connect('../get_tickets_log/black_list_tickets.db')
+    cur = db.cursor()
+    res = cur.execute(f"""SELECT ticket_id FROM black_list_tickets WHERE ticket_id = {ticket_id}""").fetchone()
+    db.commit()
+    db.close()
+    if res is None:
+        return False
+    else:
+        return True
+
+
